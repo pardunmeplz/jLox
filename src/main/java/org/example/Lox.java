@@ -25,7 +25,7 @@ public class Lox {
         BufferedReader reader = new BufferedReader(input);
 
         for(;;){
-            System.out.print("> ");
+            System.out.print(">> ");
             String line = reader.readLine();
             if(line == null) break;
             run(line);
@@ -50,8 +50,8 @@ public class Lox {
         }
     }
 
-    static void error(int line, String message, String type){
-        System.err.println("( line " + line + " ) Error " + type + ": " + message);
+    static void error(int line, String message){
+        System.err.println("( line " + line + " ) Error : " + message);
         hadError = true;
     }
 }
