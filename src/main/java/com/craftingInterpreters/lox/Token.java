@@ -1,4 +1,4 @@
-package org.example;
+package com.craftingInterpreters.lox;
 
 public record Token(int line, Object literal, String lexeme, TokenType type){
     public String toString(){
