@@ -1,12 +1,33 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Scanner {
     private final String source;
     private final List<Token> tokens = new ArrayList<>();
 
+    private static final HashMap<String, TokenType> keywordMap;
+    static {
+        keywordMap = new HashMap<>();
+        keywordMap.put("and", TokenType.AND);
+        keywordMap.put("or", TokenType.OR);
+        keywordMap.put("else", TokenType.ELSE);
+        keywordMap.put("if", TokenType.IF);
+        keywordMap.put("for", TokenType.FOR);
+        keywordMap.put("while", TokenType.WHILE);
+        keywordMap.put("class", TokenType.CLASS);
+        keywordMap.put("print", TokenType.PRINT);
+        keywordMap.put("fun", TokenType.FUN);
+        keywordMap.put("true", TokenType.TRUE);
+        keywordMap.put("false", TokenType.FALSE);
+        keywordMap.put("nil", TokenType.NIL);
+        keywordMap.put("var", TokenType.VAR);
+        keywordMap.put("return", TokenType.RETURN);
+        keywordMap.put("super", TokenType.SUPER);
+        keywordMap.put("this", TokenType.THIS);
+    }
     // location info
     private int start = 0, current=0, line=0;
     Scanner(String source){
@@ -29,7 +50,6 @@ public class Scanner {
     }
 
     private void scanToken(){
-        // todo: implement keyword and identifier scanning
         char c = advance();
         switch (c){
             case '(':
@@ -100,6 +120,7 @@ public class Scanner {
                 line ++;
                 break;
             default:
+                // number check
                 if(isDigit(c)){
                     while(isDigit(peek()) && ! isAtEnd())advance();
                     if(peek() == '.' && isDigit(peekNext())){
@@ -107,6 +128,15 @@ public class Scanner {
                         while (isDigit(peek()) && !isAtEnd());
                     }
                     addToken(TokenType.NUMBER, Double.parseDouble(source.substring(start,current)));
+                    break;
+                }
+
+                // identifier & keyword check
+                if(isAlpha(c)){
+                    while(isAlphaNumeric(peek()) && !isAtEnd()) advance();
+                    TokenType type = keywordMap.get(source.substring(start,current));
+                    if(type == null) type = TokenType.IDENTIFIER;
+                    addToken(type);
                     break;
                 }
                 Lox.error(line,"Unexpected character "+c);
@@ -146,5 +176,15 @@ public class Scanner {
 
     private boolean isDigit(char c){
         return '0' <= c && c <='9';
+    }
+
+    private boolean isAlpha(char c){
+        return ('a' <= c && c <= 'z') ||
+                ('A' <= c && c<='Z') ||
+                c == '_';
+    }
+
+    private boolean isAlphaNumeric (char c){
+        return isDigit(c) || isAlpha(c);
     }
 }
