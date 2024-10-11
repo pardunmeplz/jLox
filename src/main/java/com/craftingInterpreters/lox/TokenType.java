@@ -1,4 +1,4 @@
-package org.example;
+package com.craftingInterpreters.lox;
 
 public enum TokenType {
    // Single char

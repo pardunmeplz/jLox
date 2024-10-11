@@ -1,4 +1,4 @@
-package org.example;
+package com.craftingInterpreters.lox;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,7 +105,7 @@ public class Scanner {
             case '"':
                 while(peek() != '"' && !isAtEnd()){
                     if(advance() == '\n')line++;
-                };
+                }
                 if(isAtEnd()){
                     Lox.error(line, "Missing \", unterminated string");
                     break;
