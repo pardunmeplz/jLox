@@ -4,10 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5d7d88e5-0ead-43c3-b80b-232dfde2ab6a" name="Changes" comment="fixing package names and adding scripts to generate expression type classes.">
+    <list default="true" id="5d7d88e5-0ead-43c3-b80b-232dfde2ab6a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/AstPrinter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/ParseError.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Expr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Expr.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Token.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Lox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Lox.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Parser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/tool/GenerateAst.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/tool/GenerateAst.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -73,14 +76,27 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;
   }
 }</component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Lox">
     <configuration name="GenerateAst" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.craftingInterpreters.tool.GenerateAst" />
       <module name="jLox.main" />
       <option name="PROGRAM_PARAMETERS" value="D:\Code\Java\Projects\jLox\jLox\src\main\java\com\craftingInterpreters\lox" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.craftingInterpreters.tool.*" />
+          <option name="PATTERN" value="com.craftingInterpreters.lox.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Lox" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.craftingInterpreters.lox.Lox" />
+      <module name="jLox.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.craftingInterpreters.lox.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -90,6 +106,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Lox" />
         <item itemvalue="Application.GenerateAst" />
       </list>
     </recent_temporary>
@@ -135,7 +152,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728673318604</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Adding a bunch of metaprogramming stuff from the book that I literally am unable to keep track of&#10;&#10;Probably gonna circle back to this again after further implementation becomes clearer">
+      <option name="closed" value="true" />
+      <created>1728801491752</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1728801491752</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -166,6 +191,7 @@
     <MESSAGE value="Adding Scanner implementation for single/ double char tokens, string and number literals." />
     <MESSAGE value="Adding Scanner implementation for reserved keywords and identifiers." />
     <MESSAGE value="fixing package names and adding scripts to generate expression type classes." />
-    <option name="LAST_COMMIT_MESSAGE" value="fixing package names and adding scripts to generate expression type classes." />
+    <MESSAGE value="Adding a bunch of metaprogramming stuff from the book that I literally am unable to keep track of&#10;&#10;Probably gonna circle back to this again after further implementation becomes clearer" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adding a bunch of metaprogramming stuff from the book that I literally am unable to keep track of&#10;&#10;Probably gonna circle back to this again after further implementation becomes clearer" />
   </component>
 </project>
