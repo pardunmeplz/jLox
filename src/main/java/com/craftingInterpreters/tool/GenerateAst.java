@@ -43,6 +43,9 @@ public class GenerateAst {
            defineType(writer, baseName, className, fields);
        }
 
+       writer.println();
+       writer.println("   abstract <R> R accept(Visitor<R> visitor);");
+
         writer.println("}");
         writer.close();
     }
@@ -87,7 +90,7 @@ public class GenerateAst {
         writer.println(" interface Visitor<R> {");
         for (String type: types){
             String typeName = type.split(":")[0].trim();
-            writer.println("    R visit" + typeName + baseName +"{" + typeName + " " +baseName.toLowerCase() +");");
+            writer.println("    R visit" + typeName + baseName +"(" + typeName + " " +baseName.toLowerCase() +");");
         }
         writer.println("  }");
     }
