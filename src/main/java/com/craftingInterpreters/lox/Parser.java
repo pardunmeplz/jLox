@@ -1,6 +1,30 @@
 package com.craftingInterpreters.lox;
 
+import java.util.ArrayList;
 import java.util.List;
+/*
+    program        → declaration* EOF ;
+
+    declaration    → varDeclaration
+               | statement ;
+    varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
+    statement      → exprStmt
+                   | printStmt ;
+    exprStmt       → expression ";" ;
+    printStmt      → "print" expression ";" ;
+
+    expression     → equality ;
+    equality       → comparison ( ( "!=" | "==" ) comparison )* ;
+    comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
+    term           → factor ( ( "-" | "+" ) factor )* ;
+    factor         → unary ( ( "/" | "*" ) unary )* ;
+    unary          → ( "!" | "-" ) unary
+                   | primary ;
+    primary        → NUMBER | STRING | "true" | "false" | "nil" | IDENTIFIER
+            | "(" expression ")" ;
+*/
+
+
 
 public class Parser {
     private final List<Token> tokens;
@@ -10,13 +34,41 @@ public class Parser {
         this.tokens = tokens;
     }
 
-    Expr parse(){
-        try{
-            return expression();
-        }catch (ParseError error){
+    List<Stmt> parse(){
+        List<Stmt> statements = new ArrayList<>();
+        try {
+            while (!isAtEnd()) {
+                statements.add(statement());
+            }
+            return statements;
+        } catch (RuntimeError error){
             return null;
         }
     }
+
+    private Stmt statement(){
+        if(match(TokenType.PRINT)){
+            return printStmt();
+        }
+        return exprStmt();
+    }
+
+    private Stmt exprStmt(){
+        Expr expression =  expression();
+        if(match((TokenType.SEMICOLON))){
+            return new Stmt.Expression(expression);
+        }
+        throw error(peek(), "missing semicolon ';' at end of statement");
+    }
+
+    private Stmt printStmt(){
+        Expr expression =  expression();
+        if(match(TokenType.SEMICOLON)){
+            return new Stmt.Print(expression);
+        }
+        throw error(peek(), "missing semicolon ';' at end of statement");
+    }
+
     private Expr expression(){
         return equality();
     }
