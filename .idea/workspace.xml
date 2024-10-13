@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5d7d88e5-0ead-43c3-b80b-232dfde2ab6a" name="Changes" comment="Implementing code for Parsing expressions">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Interpreter.java" afterDir="false" />
+    <list default="true" id="5d7d88e5-0ead-43c3-b80b-232dfde2ab6a" name="Changes" comment="Implementing code for interpreting expressions along with error handling">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Interpreter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Interpreter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Lox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Lox.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -163,7 +164,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728815485967</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Implementing code for interpreting expressions along with error handling">
+      <option name="closed" value="true" />
+      <created>1728824895218</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1728824895218</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -196,6 +205,7 @@
     <MESSAGE value="fixing package names and adding scripts to generate expression type classes." />
     <MESSAGE value="Adding a bunch of metaprogramming stuff from the book that I literally am unable to keep track of&#10;&#10;Probably gonna circle back to this again after further implementation becomes clearer" />
     <MESSAGE value="Implementing code for Parsing expressions" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implementing code for Parsing expressions" />
+    <MESSAGE value="Implementing code for interpreting expressions along with error handling" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implementing code for interpreting expressions along with error handling" />
   </component>
 </project>
