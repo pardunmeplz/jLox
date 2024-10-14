@@ -1,0 +1,12 @@
+// A test script file to run in the jLox interpreter
+var a  = 12;
+var b = 3;
+{
+    var a = 24;
+    b = 5;
+    print a;
+    print b;
+}
+
+print a;
+print b;

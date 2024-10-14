@@ -7,7 +7,8 @@ import java.util.List;
 
     declaration    → varDeclaration | statement ;
     varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
-    statement      → exprStmt | printStmt ;
+    statement      → exprStmt | printStmt | block;
+    block          → "{" declaration "}";
     exprStmt       → expression ";" ;
     printStmt      → "print" expression ";" ;
 
@@ -72,6 +73,9 @@ public class Parser {
         if(match(TokenType.PRINT)){
             return printStmt();
         }
+        if(match(TokenType.LEFT_BRACE)){
+            return new Stmt.Block(block());
+        }
         return exprStmt();
     }
 
@@ -89,6 +93,15 @@ public class Parser {
             return new Stmt.Print(expression);
         }
         throw error(peek(), "Missing semicolon ';' at end of statement");
+    }
+
+    private List<Stmt> block(){
+        List<Stmt> statements = new ArrayList<>();
+        while (!isAtEnd() && !match(TokenType.RIGHT_BRACE)){
+            statements.add(declaration());
+        }
+        if(isAtEnd()) throw error(peek(), "Expect '}' after block");
+        return statements;
     }
 
     private Expr expression(){
