@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5d7d88e5-0ead-43c3-b80b-232dfde2ab6a" name="Changes" comment="fixing runtime error handling and calling interpreter logic in main function">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Stmt.java" afterDir="false" />
+    <list default="true" id="5d7d88e5-0ead-43c3-b80b-232dfde2ab6a" name="Changes" comment="adding proper statement grammar to the parser and interpreter and setting up initial code for variable declaration.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Environment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/AstPrinter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Expr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Expr.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Interpreter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Interpreter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Lox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Lox.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Parser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/tool/GenerateAst.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/tool/GenerateAst.java" afterDir="false" />
     </list>
@@ -183,7 +184,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728835438034</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="adding proper statement grammar to the parser and interpreter and setting up initial code for variable declaration.">
+      <option name="closed" value="true" />
+      <created>1728843846768</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1728843846768</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -218,6 +227,7 @@
     <MESSAGE value="Implementing code for Parsing expressions" />
     <MESSAGE value="Implementing code for interpreting expressions along with error handling" />
     <MESSAGE value="fixing runtime error handling and calling interpreter logic in main function" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixing runtime error handling and calling interpreter logic in main function" />
+    <MESSAGE value="adding proper statement grammar to the parser and interpreter and setting up initial code for variable declaration." />
+    <option name="LAST_COMMIT_MESSAGE" value="adding proper statement grammar to the parser and interpreter and setting up initial code for variable declaration." />
   </component>
 </project>

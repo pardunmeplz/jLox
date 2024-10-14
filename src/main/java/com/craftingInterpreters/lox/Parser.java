@@ -5,23 +5,20 @@ import java.util.List;
 /*
     program        → declaration* EOF ;
 
-    declaration    → varDeclaration
-               | statement ;
+    declaration    → varDeclaration | statement ;
     varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
-    statement      → exprStmt
-                   | printStmt ;
+    statement      → exprStmt | printStmt ;
     exprStmt       → expression ";" ;
     printStmt      → "print" expression ";" ;
 
-    expression     → equality ;
+    expression     → assignment;
+    assignment     → IDENTIFIER "=" assignment | equality;
     equality       → comparison ( ( "!=" | "==" ) comparison )* ;
     comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
     term           → factor ( ( "-" | "+" ) factor )* ;
     factor         → unary ( ( "/" | "*" ) unary )* ;
-    unary          → ( "!" | "-" ) unary
-                   | primary ;
-    primary        → NUMBER | STRING | "true" | "false" | "nil" | IDENTIFIER
-            | "(" expression ")" ;
+    unary          → ( "!" | "-" ) unary | primary ;
+    primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" ;
 */
 
 
@@ -38,12 +35,37 @@ public class Parser {
         List<Stmt> statements = new ArrayList<>();
         try {
             while (!isAtEnd()) {
-                statements.add(statement());
+                statements.add(declaration());
             }
             return statements;
         } catch (RuntimeError error){
             return null;
         }
+    }
+
+    private Stmt declaration(){
+        try {
+            if (match(TokenType.VAR)) {
+                return varDeclaration();
+            }
+            return statement();
+        }catch (ParseError error){
+           synchronize();
+           return null;
+        }
+    }
+
+    private Stmt varDeclaration(){
+       if(match(TokenType.IDENTIFIER)){
+           Token name = previous();
+           Expr initial = null;
+           if(match(TokenType.EQUAL)){
+              initial = expression();
+           }
+           if(match(TokenType.SEMICOLON))return new Stmt.Var(name, initial);
+           throw error(peek(), "Missing semicolon ';' at end of statement");
+       }
+        throw error(peek(),"Expected name for variable declaration");
     }
 
     private Stmt statement(){
@@ -58,7 +80,7 @@ public class Parser {
         if(match((TokenType.SEMICOLON))){
             return new Stmt.Expression(expression);
         }
-        throw error(peek(), "missing semicolon ';' at end of statement");
+        throw error(peek(), "Missing semicolon ';' at end of statement");
     }
 
     private Stmt printStmt(){
@@ -66,11 +88,28 @@ public class Parser {
         if(match(TokenType.SEMICOLON)){
             return new Stmt.Print(expression);
         }
-        throw error(peek(), "missing semicolon ';' at end of statement");
+        throw error(peek(), "Missing semicolon ';' at end of statement");
     }
 
     private Expr expression(){
-        return equality();
+        return assignment();
+    }
+
+    private Expr assignment(){
+        Expr expr = equality();
+
+        if(match(TokenType.EQUAL)){
+           Token lValue = previous();
+           Expr value = assignment();
+
+           if(expr instanceof Expr.Var){
+               Token name = ((Expr.Var)expr).name;
+               return new Expr.Assign(name, value);
+           }
+
+           throw error(lValue, "Invalid assignment target");
+        }
+        return expr;
     }
 
     private Expr equality(){
@@ -135,6 +174,8 @@ public class Parser {
                 return new Expr.Literal(false);
             case TokenType.NIL:
                 return new Expr.Literal(null);
+            case TokenType.IDENTIFIER:
+                return new Expr.Var(token);
             case TokenType.LEFT_PAR:
                 Expr groupExpression = expression();
                 if(match(TokenType.RIGHT_PAR)){
