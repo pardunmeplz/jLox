@@ -1,19 +1,27 @@
 package com.craftingInterpreters.lox;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 /*
     program        → declaration* EOF ;
 
     declaration    → varDeclaration | statement ;
     varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
-    statement      → exprStmt | printStmt | block;
+    statement      → exprStmt | ifStmt | whileStmt | forStmt | printStmt | block;
+    ifStmt         → "if" "(" expression ")" statement
+                       (else statement)?;
+    whileStmt      → "while" "(" expression ")" statement;
+    forStmt        → "for" "(" varDecl | exprStmt | ";" expression? ";" expression? ")" statement;
+
     block          → "{" declaration "}";
     exprStmt       → expression ";" ;
     printStmt      → "print" expression ";" ;
 
     expression     → assignment;
-    assignment     → IDENTIFIER "=" assignment | equality;
+    assignment     → IDENTIFIER "=" assignment | logicalOr;
+    logicalOr      → logicalAnd ( "or" logicalAnd)*;
+    logicalAnd     → equality ( "and" equality)*;
     equality       → comparison ( ( "!=" | "==" ) comparison )* ;
     comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
     term           → factor ( ( "-" | "+" ) factor )* ;
@@ -76,7 +84,78 @@ public class Parser {
         if(match(TokenType.LEFT_BRACE)){
             return new Stmt.Block(block());
         }
+        if (match(TokenType.IF)) {
+            return ifStmt();
+        }
+        if(match(TokenType.WHILE)){
+            return whileStmt();
+        }
+        if(match(TokenType.FOR)){
+            return forStmt();
+        }
         return exprStmt();
+    }
+
+    private Stmt whileStmt(){
+        if(!match(TokenType.LEFT_PAR)) throw error(peek(), "Expected '(' after If statement");
+        Expr condition = expression();
+        if(!match(TokenType.RIGHT_PAR)) throw error(peek(), "Expected ')' after expression");
+
+        Stmt loop = statement();
+        return new Stmt.While(condition, loop);
+    }
+
+    private Stmt forStmt(){
+        // todo: for loop not working, pls fix
+        if(!match(TokenType.LEFT_PAR)) throw error(peek(), "Expected '(' after If statement");
+        Stmt initialization = null;
+        if(!match(TokenType.SEMICOLON)){
+           if(match(TokenType.VAR)){
+               initialization = varDeclaration();
+           }else{
+               initialization = exprStmt();
+           }
+            if(!match(TokenType.SEMICOLON)) throw error(peek(), "Expected ';' after statement");
+        }
+        Expr condition = new Expr.Literal(true);
+        if(!match(TokenType.SEMICOLON)){
+            condition = expression();
+            if(!match(TokenType.SEMICOLON)) throw error(peek(), "Expected ';' after statement");
+        }
+
+        Expr increment = null;
+        if(!match(TokenType.RIGHT_PAR)){
+            increment = expression();
+            if(!match(TokenType.RIGHT_PAR)) throw error(peek(), "Expected ')' after expression");
+        }
+        Stmt body = statement();
+        if(increment != null){
+            body = new Stmt.Block(Arrays.asList(
+                    body,
+                    new Stmt.Expression(increment)
+            ));
+        }
+        body =  new Stmt.While(condition,body);
+        if(initialization != null){
+            body = new Stmt.Block(Arrays.asList(
+                    initialization,
+                    body
+            ));
+        }
+        return body;
+    }
+
+    private Stmt ifStmt(){
+        if(!match(TokenType.LEFT_PAR)) throw error(peek(), "Expected '(' after If statement");
+        Expr condition = expression();
+        if(!match(TokenType.RIGHT_PAR)) throw error(peek(), "Expected ')' after expression");
+
+        Stmt then = statement();
+        Stmt elseStmt = null;
+        if(match(TokenType.ELSE)){
+            elseStmt = statement();
+        }
+        return new Stmt.If(condition, then, elseStmt);
     }
 
     private Stmt exprStmt(){
@@ -100,7 +179,7 @@ public class Parser {
         while (!isAtEnd() && !match(TokenType.RIGHT_BRACE)){
             statements.add(declaration());
         }
-        if(isAtEnd()) throw error(peek(), "Expect '}' after block");
+        if(previous().type() != TokenType.RIGHT_BRACE) throw error(peek(), "Expect '}' after block");
         return statements;
     }
 
@@ -109,7 +188,7 @@ public class Parser {
     }
 
     private Expr assignment(){
-        Expr expr = equality();
+        Expr expr = logicalOr();
 
         if(match(TokenType.EQUAL)){
            Token lValue = previous();
@@ -121,6 +200,27 @@ public class Parser {
            }
 
            throw error(lValue, "Invalid assignment target");
+        }
+        return expr;
+    }
+
+    private Expr logicalOr(){
+        Expr expr = logicalAnd();
+        while(match(TokenType.OR)){
+            Token operator = previous();
+            Expr right = logicalAnd();
+            expr = new Expr.Logical(expr, operator, right);
+        }
+        return expr;
+
+    }
+
+    private Expr logicalAnd(){
+        Expr expr =  equality();
+        while(match(TokenType.AND)){
+            Token operator = previous();
+            Expr right = equality();
+            expr = new Expr.Logical(expr, operator,right);
         }
         return expr;
     }
