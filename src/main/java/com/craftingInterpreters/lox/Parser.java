@@ -115,7 +115,6 @@ public class Parser {
            }else{
                initialization = exprStmt();
            }
-            if(!match(TokenType.SEMICOLON)) throw error(peek(), "Expected ';' after statement");
         }
         Expr condition = new Expr.Literal(true);
         if(!match(TokenType.SEMICOLON)){
