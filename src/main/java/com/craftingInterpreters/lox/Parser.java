@@ -27,10 +27,10 @@ import java.util.List;
     term           → factor ( ( "-" | "+" ) factor )* ;
     factor         → unary ( ( "/" | "*" ) unary )* ;
     unary          → ( "!" | "-" ) unary | primary ;
+    call           → primary ( "(" arguments? ")" )*;
+    arguments      → expression ( "," expression )*;
     primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" ;
 */
-
-
 
 public class Parser {
     private final List<Token> tokens;
@@ -271,7 +271,28 @@ public class Parser {
             Expr right = unary();
             return new Expr.Unary(operator, right);
         }
-        return primary();
+        return call();
+    }
+
+    private Expr call(){
+        Expr expr = primary();
+        while(match(TokenType.LEFT_PAR)){
+           expr = finishCall(expr);
+        }
+        return expr;
+    }
+
+    private Expr finishCall(Expr callee){
+        List<Expr> arguments = new ArrayList<>();
+       if(match(TokenType.RIGHT_PAR)) return new Expr.Call(callee, previous(),arguments);
+       do{
+           if(arguments.size() >= 255){
+               error(peek(),"Can't have more than 255 arguments");
+           }
+           arguments.add(expression());
+       }while (match(TokenType.COMMA));
+       if(!match(TokenType.RIGHT_PAR)) throw error(peek(), "Expected ')' after arguments");
+       return new Expr.Call(callee, previous(),arguments);
     }
 
     private Expr primary(){

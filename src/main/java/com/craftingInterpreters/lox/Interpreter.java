@@ -1,10 +1,23 @@
 package com.craftingInterpreters.lox;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
+    final Environment globals = new Environment();
+    Environment environment = globals;
 
-    Environment environment = new Environment();
+    Interpreter(){
+        globals.define("clock", new LoxCallable(){
+            @Override
+            public Object call(Interpreter interpreter, List<Object> arguments) {
+                return (double) System.currentTimeMillis() / 10000.0;
+            }
+
+            @Override
+            public int arity(){return 0;}
+        });
+    }
     void interpret(List<Stmt> statements){
         try{
             for(Stmt statement : statements){
@@ -97,6 +110,22 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         if(expr.operator.type() == TokenType.AND && !isTruthy(left)) return left;
         if(expr.operator.type() == TokenType.OR && isTruthy(left)) return left;
         return evaluate(expr.right);
+    }
+
+    @Override
+    public Object visitCallExpr(Expr.Call expr) {
+        Object callee = evaluate(expr.callee);
+        if(!(callee instanceof LoxCallable function))throw new RuntimeError(expr.paren, "Expression is not callable, only functions and classes are callable");
+
+        List<Object> arguments = new ArrayList<>();
+        for(Expr argument: expr.arguments){
+            arguments.add(evaluate(argument));
+        }
+        if(arguments.size() != function.arity()){
+            throw new RuntimeError(expr.paren, "Expected " + function.arity() + " arguments, got "
+           + arguments.size() + " instead" );
+        }
+        return function.call(this,arguments);
     }
 
     private Object evaluate(Expr expression){
