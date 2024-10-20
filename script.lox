@@ -1,22 +1,8 @@
-// A test script file to run in the jLox interpreter
-var a  = 1;
-
-if(a == 12) print 555;
-else print 44;
-
-while(a > 0){
- a = a-1;
- print a < 13;
-}
-var i =  0;
-
-print clock();
-for( ; i < 2000000; i = i + 1){
-    a = a-1;
+fun fib(n) {
+  if (n <= 1) return n;
+  return fib(n - 2) + fib(n - 1);
 }
 
-fun mynewfunc(){
-    print "taco time yoo";
+for (var i = 0; i < 20; i = i + 1) {
+  print fib(i);
 }
-
-mynewfunc();

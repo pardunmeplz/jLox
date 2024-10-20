@@ -15,7 +15,13 @@ public class LoxFunction implements LoxCallable{
             environment.define(param.lexeme(), arguments.get(i));
             i++;
         }
-        interpreter.executeBlock(functionStatement.body, environment);
+        // it's slightly insane to me that the error handling is being used as a control flow mechanism
+        // to run the return statement
+        try {
+            interpreter.executeBlock(functionStatement.body, environment);
+        } catch (Return retValue){
+            return retValue.value;
+        }
         return null;
     }
 
