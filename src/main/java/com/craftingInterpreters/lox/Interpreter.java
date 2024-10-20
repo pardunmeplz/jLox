@@ -222,6 +222,12 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return null;
     }
 
+    @Override
+    public Void visitReturnStmtStmt(Stmt.ReturnStmt stmt) {
+        Object value = evaluate(stmt.expr);
+        throw new Return(value);
+    }
+
     private void execute(Stmt stmt){
         stmt.accept(this);
     }

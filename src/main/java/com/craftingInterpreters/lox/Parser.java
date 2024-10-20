@@ -13,9 +13,11 @@ import java.util.List;
     parameters     → IDENTIFIER ( "," IDENTIFIER )*;
 
     varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
-    statement      → exprStmt | ifStmt | whileStmt | forStmt | printStmt | block;
+    statement      → exprStmt | ifStmt | whileStmt | forStmt | returnStmt |  printStmt | block;
     ifStmt         → "if" "(" expression ")" statement
                        (else statement)?;
+
+    returnStmt     → "return" expression? ";" ;
 
     whileStmt      → "while" "(" expression ")" statement;
     forStmt        → "for" "(" varDecl | exprStmt | ";" expression? ";" expression? ")" statement;
@@ -122,7 +124,19 @@ public class Parser {
         if(match(TokenType.FOR)){
             return forStmt();
         }
+        if(match(TokenType.RETURN)){
+            return returnStmt();
+        }
+
         return exprStmt();
+    }
+
+    private Stmt returnStmt(){
+        Token token = previous();
+        Expr expr = new Expr.Literal(null);
+        if(!check(TokenType.SEMICOLON)) expr = expression();
+        if(!match(TokenType.SEMICOLON)) throw error(peek(), "Expected ';' at end of statement");
+        return new Stmt.ReturnStmt(token, expr);
     }
 
     private Stmt whileStmt(){
