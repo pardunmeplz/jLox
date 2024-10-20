@@ -14,5 +14,9 @@ print clock();
 for( ; i < 2000000; i = i + 1){
     a = a-1;
 }
-print clock();
-print a;
+
+fun mynewfunc(){
+    print "taco time yoo";
+}
+
+mynewfunc();
