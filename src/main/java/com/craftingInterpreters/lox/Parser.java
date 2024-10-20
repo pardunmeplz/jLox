@@ -6,11 +6,17 @@ import java.util.List;
 /*
     program        → declaration* EOF ;
 
-    declaration    → varDeclaration | statement ;
+    declaration    → varDeclaration | statement | funcDecl ;
+
+    funcDecl       → "fun" function;
+    function       → IDENTIFIER "(" parameters? ")" block;
+    parameters     → IDENTIFIER ( "," IDENTIFIER )*;
+
     varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
     statement      → exprStmt | ifStmt | whileStmt | forStmt | printStmt | block;
     ifStmt         → "if" "(" expression ")" statement
                        (else statement)?;
+
     whileStmt      → "while" "(" expression ")" statement;
     forStmt        → "for" "(" varDecl | exprStmt | ";" expression? ";" expression? ")" statement;
 
@@ -57,12 +63,35 @@ public class Parser {
             if (match(TokenType.VAR)) {
                 return varDeclaration();
             }
+            if(match(TokenType.FUN)){
+                return funcDeclaration("function");
+            }
             return statement();
         }catch (ParseError error){
            synchronize();
            return null;
         }
     }
+
+    private Stmt funcDeclaration(String type){
+       if(!match(TokenType.IDENTIFIER)) throw error(peek(),"Expected name for " + type + " function declaration");
+       Token name = previous();
+       if(!match(TokenType.LEFT_PAR)) throw error(peek(),"Expected '(' after " + type + " name");
+       List<Token> params = new ArrayList<>();
+       if(!match(TokenType.RIGHT_PAR)){
+           do{
+               if(params.size() >= 255){
+                   error(peek(), "Can't have more than 255 parameters");
+               }
+               params.add(advance());
+           }while (match(TokenType.COMMA));
+           if(!match(TokenType.RIGHT_PAR)) throw error(peek(),"Expected ')' after parameters");
+       }
+       if(!match(TokenType.LEFT_BRACE)) throw error(peek(),"Expected '{' before body");
+       List<Stmt> body = block();
+       return new Stmt.Function(name,params,body);
+    }
+
 
     private Stmt varDeclaration(){
        if(match(TokenType.IDENTIFIER)){
