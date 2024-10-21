@@ -1,11 +1,13 @@
 package com.craftingInterpreters.lox;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     final Environment globals = new Environment();
     Environment environment = globals;
+    private final HashMap<Expr, Integer> locals = new HashMap<>();
 
     Interpreter(){
         globals.define("clock", new LoxCallable(){
@@ -28,11 +30,20 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         }
     }
 
+    void resolve(Expr expr, int depth){
+        locals.put(expr,depth);
+    }
+
     @Override
     public Object visitAssignExpr(Expr.Assign expr) {
-       Object rValue = evaluate(expr.value);
-       environment.assign(expr.name, rValue);
-       return rValue;
+        Object value = evaluate(expr.value);
+        Integer distance = locals.get(expr);
+        if(distance!= null){
+            environment.assignAt(distance, expr.name.lexeme(), value);
+        }else {
+            globals.assign(expr.name, value);
+        }
+        return value;
     }
 
     // expression logic
@@ -101,7 +112,16 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Object visitVarExpr(Expr.Var expr) {
-        return environment.get(expr.name);
+        return lookUpVariable(expr.name, expr);
+    }
+
+    private Object lookUpVariable(Token name, Expr expr){
+       Integer distance = locals.get(expr);
+       if(distance != null) {
+           return environment.getAt(distance, name.lexeme());
+       }else{
+           return globals.get(name);
+       }
     }
 
     @Override
@@ -217,7 +237,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitFunctionStmt(Stmt.Function stmt) {
-        LoxFunction loxFunction = new LoxFunction(stmt);
+        LoxFunction loxFunction = new LoxFunction(stmt, this);
         this.environment.define(stmt.name.lexeme(), loxFunction);
         return null;
     }

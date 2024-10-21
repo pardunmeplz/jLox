@@ -30,4 +30,20 @@ public class Environment {
         if(enclosing == null)throw new RuntimeError(name, "Undefined variable '" + name.lexeme() + "'");
         enclosing.assign(name, value);
     }
+
+    Object getAt(Integer distance, String name){
+        return ancestor(distance).environmentMapping.get(name);
+    }
+
+    void assignAt(Integer distance, String name, Object value){
+        ancestor(distance).environmentMapping.put(name, value);
+    }
+
+    Environment ancestor(int distance){
+        Environment environment = this;
+        for(int i = distance; i > 0; i--){
+            environment = environment.enclosing;
+        }
+        return environment;
+    }
 }
