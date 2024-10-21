@@ -148,6 +148,26 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return function.call(this,arguments);
     }
 
+    @Override
+    public Object visitGetExpressionExpr(Expr.GetExpression expr) {
+        Object object = evaluate(expr.object);
+        if(object instanceof LoxInstance){
+           return ((LoxInstance) object).get(expr.name);
+        }
+        throw new RuntimeError(expr.name, "Only instances can have properties");
+    }
+
+    @Override
+    public Object visitSetExpressionExpr(Expr.SetExpression expr) {
+        Object object = evaluate(expr.object);
+        if(object instanceof LoxInstance){
+            Object value = evaluate(expr.value);
+            ((LoxInstance) object).set(expr.name, value);
+            return value;
+        }
+        throw new RuntimeError(expr.name, "Only instances can have properties");
+    }
+
     private Object evaluate(Expr expression){
         return expression.accept(this);
     }
@@ -246,6 +266,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     public Void visitReturnStmtStmt(Stmt.ReturnStmt stmt) {
         Object value = evaluate(stmt.expr);
         throw new Return(value);
+    }
+
+    @Override
+    public Void visitClassStmtStmt(Stmt.ClassStmt stmt) {
+        environment.define(stmt.name.lexeme(), null);
+        LoxClass loxClass = new LoxClass(stmt.name.lexeme());
+        environment.assign(stmt.name, loxClass);
+        return null;
     }
 
     private void execute(Stmt stmt){
