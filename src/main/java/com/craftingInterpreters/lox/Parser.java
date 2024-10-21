@@ -6,13 +6,16 @@ import java.util.List;
 /*
     program        → declaration* EOF ;
 
-    declaration    → varDeclaration | statement | funcDecl ;
+    declaration    → varDeclaration | statement | funcDecl | classDecl ;
 
     funcDecl       → "fun" function;
     function       → IDENTIFIER "(" parameters? ")" block;
     parameters     → IDENTIFIER ( "," IDENTIFIER )*;
 
+    classDecl      → "class" IDENTIFIER "{" function* "}" ;
+
     varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
+
     statement      → exprStmt | ifStmt | whileStmt | forStmt | returnStmt |  printStmt | block;
     ifStmt         → "if" "(" expression ")" statement
                        (else statement)?;
@@ -27,7 +30,7 @@ import java.util.List;
     printStmt      → "print" expression ";" ;
 
     expression     → assignment;
-    assignment     → IDENTIFIER "=" assignment | logicalOr;
+    assignment     → (call ".")? IDENTIFIER "=" assignment | logicalOr;
     logicalOr      → logicalAnd ( "or" logicalAnd)*;
     logicalAnd     → equality ( "and" equality)*;
     equality       → comparison ( ( "!=" | "==" ) comparison )* ;
@@ -35,7 +38,8 @@ import java.util.List;
     term           → factor ( ( "-" | "+" ) factor )* ;
     factor         → unary ( ( "/" | "*" ) unary )* ;
     unary          → ( "!" | "-" ) unary | primary ;
-    call           → primary ( "(" arguments? ")" )*;
+    call           → primary ( "(" arguments? ")" )* | getExpression;
+    getExpression  → primary ( "." IDENTIFIER )*;
     arguments      → expression ( "," expression )*;
     primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" ;
 */
@@ -68,6 +72,9 @@ public class Parser {
             if(match(TokenType.FUN)){
                 return funcDeclaration("function");
             }
+            if(match(TokenType.CLASS)){
+                return classDeclaration();
+            }
             return statement();
         }catch (ParseError error){
            synchronize();
@@ -75,8 +82,20 @@ public class Parser {
         }
     }
 
-    private Stmt funcDeclaration(String type){
-       if(!match(TokenType.IDENTIFIER)) throw error(peek(),"Expected name for " + type + " function declaration");
+    private Stmt classDeclaration(){
+        if(!match(TokenType.IDENTIFIER)) throw error(peek(),"Expected name for class declaration");
+        Token name = previous();
+        if(!match(TokenType.LEFT_BRACE))throw error(peek(), "Expected '{' after class name");
+        List<Stmt.Function> methods = new ArrayList<>();
+        while(!check(TokenType.RIGHT_BRACE) && !isAtEnd()){
+            methods.add(funcDeclaration("method"));
+        }
+        if(!match(TokenType.RIGHT_BRACE))throw error(peek(), "Expected '}' at end of class declaration");
+        return new Stmt.ClassStmt(name, methods);
+    }
+
+    private Stmt.Function funcDeclaration(String type){
+       if(!match(TokenType.IDENTIFIER)) throw error(peek(),"Expected name for " + type + " declaration");
        Token name = previous();
        if(!match(TokenType.LEFT_PAR)) throw error(peek(),"Expected '(' after " + type + " name");
        List<Token> params = new ArrayList<>();
@@ -239,6 +258,8 @@ public class Parser {
            if(expr instanceof Expr.Var){
                Token name = ((Expr.Var)expr).name;
                return new Expr.Assign(name, value);
+           } else if(expr instanceof Expr.GetExpression getExpr){
+               return new Expr.SetExpression(getExpr.object, getExpr.name, value);
            }
 
            throw error(lValue, "Invalid assignment target");
@@ -319,10 +340,15 @@ public class Parser {
 
     private Expr call(){
         Expr expr = primary();
-        while(match(TokenType.LEFT_PAR)){
-           expr = finishCall(expr);
+        while(match(TokenType.LEFT_PAR) || match(TokenType.DOT)){
+           expr = previous().type() == TokenType.LEFT_PAR? finishCall(expr):getExpression(expr) ;
         }
         return expr;
+    }
+
+    private Expr getExpression(Expr object){
+        if(!match(TokenType.IDENTIFIER))throw error(peek(), "Expected property name after '.'");
+        return new Expr.GetExpression(object, previous());
     }
 
     private Expr finishCall(Expr callee){

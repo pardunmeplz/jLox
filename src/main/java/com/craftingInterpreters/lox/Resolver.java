@@ -140,6 +140,19 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
     }
 
     @Override
+    public Void visitGetExpressionExpr(Expr.GetExpression expr) {
+        resolve(expr.object);
+        return null;
+    }
+
+    @Override
+    public Void visitSetExpressionExpr(Expr.SetExpression expr) {
+        resolve(expr.object);
+        resolve(expr.value);
+        return null;
+    }
+
+    @Override
     public Void visitExpressionStmt(Stmt.Expression stmt) {
         resolve(stmt.expression);
         return null;
@@ -194,6 +207,16 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
     public Void visitReturnStmtStmt(Stmt.ReturnStmt stmt) {
         if(currentFunction == FunctionType.NONE) Lox.error(stmt.keyword, "Can not return from top-level code");
         if(stmt.expr != null)resolve(stmt.expr);
+        return null;
+    }
+
+    @Override
+    public Void visitClassStmtStmt(Stmt.ClassStmt stmt) {
+        declare(stmt.name);
+        define(stmt.name);
+//        for(Stmt.Function method: stmt.methods){
+//            resolveFunction(method);
+//        }
         return null;
     }
 }

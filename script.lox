@@ -1,13 +1,9 @@
-fun a(){
-    print x;
-    fun b(){
-        print x;
+class myTestClass{
+    try(){
+        print "hi";
     }
-    return b;
 }
-
-
-var x = 55;
-var myb = a();
-var x = 22;
-myb();
+var myInst = myTestClass();
+myInst.newField = 33;
+print myInst;
+print myInst.newField;
