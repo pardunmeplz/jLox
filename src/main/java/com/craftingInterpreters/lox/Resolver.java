@@ -12,6 +12,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
     private FunctionType currentFunction = FunctionType.NONE;
     private enum FunctionType{
         NONE,
+        METHOD,
         FUNCTION
     }
     Resolver(Interpreter interpreter){
@@ -68,10 +69,10 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
         }
     }
 
-    void resolveFunction(Stmt.Function stmt){
+    void resolveFunction(Stmt.Function stmt, FunctionType functionType){
        beginScope();
        FunctionType outerFunc = currentFunction;
-       currentFunction = FunctionType.FUNCTION;
+       currentFunction = functionType;
 
        for(Token param: stmt.params){
            declare(param);
@@ -199,7 +200,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
     public Void visitFunctionStmt(Stmt.Function stmt) {
         declare(stmt.name);
         define(stmt.name);
-        resolveFunction(stmt);
+        resolveFunction(stmt, FunctionType.FUNCTION);
         return null;
     }
 
@@ -214,9 +215,10 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
     public Void visitClassStmtStmt(Stmt.ClassStmt stmt) {
         declare(stmt.name);
         define(stmt.name);
-//        for(Stmt.Function method: stmt.methods){
-//            resolveFunction(method);
-//        }
+        for(Stmt.Function method: stmt.methods){
+            FunctionType declaration = FunctionType.METHOD;
+            resolveFunction(method,declaration);
+        }
         return null;
     }
 }
