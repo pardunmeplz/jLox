@@ -25,7 +25,7 @@ public class LoxInstance {
 
     LoxFunction findMethod(Token name){
         if(loxClass.methods.containsKey(name.lexeme())){
-            return loxClass.methods.get(name.lexeme());
+            return loxClass.methods.get(name.lexeme()).bind(this);
         }
         return null;
     }

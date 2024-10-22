@@ -168,6 +168,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         throw new RuntimeError(expr.name, "Only instances can have properties");
     }
 
+    @Override
+    public Object visitThisExpr(Expr.This expr) {
+        return lookUpVariable(expr.keyword, expr);
+    }
+
     private Object evaluate(Expr expression){
         return expression.accept(this);
     }

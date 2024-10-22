@@ -1,7 +1,8 @@
 class myTestClass{
     try(){
-        print "hi";
+        print this.greeting;
     }
 }
 var myInst = myTestClass();
+myInst.greeting = "hello";
 myInst.try();
