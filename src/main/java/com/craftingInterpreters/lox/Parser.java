@@ -376,6 +376,8 @@ public class Parser {
                 return new Expr.Literal(false);
             case TokenType.NIL:
                 return new Expr.Literal(null);
+            case TokenType.THIS:
+                return new Expr.This(token);
             case TokenType.IDENTIFIER:
                 return new Expr.Var(token);
             case TokenType.LEFT_PAR:

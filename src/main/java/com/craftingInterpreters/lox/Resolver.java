@@ -154,6 +154,13 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
     }
 
     @Override
+    public Void visitThisExpr(Expr.This expr) {
+        if(currentFunction != FunctionType.METHOD) Lox.error(expr.keyword, "'this' keyword can only be used in a class method");
+        resolveLocal(expr, expr.keyword);
+        return null;
+    }
+
+    @Override
     public Void visitExpressionStmt(Stmt.Expression stmt) {
         resolve(stmt.expression);
         return null;
@@ -215,10 +222,13 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
     public Void visitClassStmtStmt(Stmt.ClassStmt stmt) {
         declare(stmt.name);
         define(stmt.name);
+        beginScope();
+        scopes.peek().put("this", true);
         for(Stmt.Function method: stmt.methods){
             FunctionType declaration = FunctionType.METHOD;
             resolveFunction(method,declaration);
         }
+        endScope();
         return null;
     }
 }
