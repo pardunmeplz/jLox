@@ -1,11 +1,14 @@
 package com.craftingInterpreters.lox;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class LoxClass implements LoxCallable {
     final String name;
-    LoxClass(String name){
+    final HashMap<String, LoxFunction> methods;
+    LoxClass(String name, HashMap<String, LoxFunction> methods){
         this.name = name;
+        this.methods = methods;
     }
 
     @Override

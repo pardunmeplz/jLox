@@ -4,6 +4,4 @@ class myTestClass{
     }
 }
 var myInst = myTestClass();
-myInst.newField = 33;
-print myInst;
-print myInst.newField;
+myInst.try();
