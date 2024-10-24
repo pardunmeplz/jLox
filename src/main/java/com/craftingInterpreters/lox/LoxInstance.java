@@ -17,17 +17,10 @@ public class LoxInstance {
         if(fields.containsKey(name.lexeme())){
            return fields.get(name.lexeme());
         }
-        LoxFunction method = findMethod(name);
+        LoxFunction method = loxClass.findMethod(name.lexeme()).bind(this);
         if(method != null)return method;
 
         throw new RuntimeError(name, "Property " + name.lexeme() +" not found in instance");
-    }
-
-    LoxFunction findMethod(Token name){
-        if(loxClass.methods.containsKey(name.lexeme())){
-            return loxClass.methods.get(name.lexeme()).bind(this);
-        }
-        return null;
     }
 
     void set(Token name, Object value){

@@ -12,7 +12,7 @@ import java.util.List;
     function       → IDENTIFIER "(" parameters? ")" block;
     parameters     → IDENTIFIER ( "," IDENTIFIER )*;
 
-    classDecl      → "class" IDENTIFIER "{" function* "}" ;
+    classDecl      → "class" IDENTIFIER ( "<" IDENTIFIER )? "{" function* "}" ;
 
     varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
 
@@ -85,13 +85,18 @@ public class Parser {
     private Stmt classDeclaration(){
         if(!match(TokenType.IDENTIFIER)) throw error(peek(),"Expected name for class declaration");
         Token name = previous();
+        Expr.Var superClass = null;
+        if(match(TokenType.LESS)){
+            if(!match(TokenType.IDENTIFIER)) throw error(peek(),"Expected name for class declaration");
+            superClass = new Expr.Var(previous());
+        }
         if(!match(TokenType.LEFT_BRACE))throw error(peek(), "Expected '{' after class name");
         List<Stmt.Function> methods = new ArrayList<>();
         while(!check(TokenType.RIGHT_BRACE) && !isAtEnd()){
             methods.add(funcDeclaration("method"));
         }
         if(!match(TokenType.RIGHT_BRACE))throw error(peek(), "Expected '}' at end of class declaration");
-        return new Stmt.ClassStmt(name, methods);
+        return new Stmt.ClassStmt(name, superClass, methods);
     }
 
     private Stmt.Function funcDeclaration(String type){

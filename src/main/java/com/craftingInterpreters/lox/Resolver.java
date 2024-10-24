@@ -13,6 +13,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
     private enum FunctionType{
         NONE,
         METHOD,
+        INITIALIZER,
         FUNCTION
     }
     Resolver(Interpreter interpreter){
@@ -214,7 +215,10 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
     @Override
     public Void visitReturnStmtStmt(Stmt.ReturnStmt stmt) {
         if(currentFunction == FunctionType.NONE) Lox.error(stmt.keyword, "Can not return from top-level code");
-        if(stmt.expr != null)resolve(stmt.expr);
+        if(stmt.expr != null){
+            if(currentFunction == FunctionType.INITIALIZER) Lox.error(stmt.keyword, "Can not return a value from initializer");
+            resolve(stmt.expr);
+        }
         return null;
     }
 
@@ -222,6 +226,10 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
     public Void visitClassStmtStmt(Stmt.ClassStmt stmt) {
         declare(stmt.name);
         define(stmt.name);
+        if(stmt.superclass != null){
+            if(stmt.name.lexeme().equals(stmt.superclass.name.lexeme())) Lox.error(stmt.superclass.name, "A class can not inherit from itself");
+           resolve(stmt.superclass);
+        }
         beginScope();
         scopes.peek().put("this", true);
         for(Stmt.Function method: stmt.methods){

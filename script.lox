@@ -1,8 +1,13 @@
 class myTestClass{
+    init(){
+        this.greeting = "greetings peasant >:)";
+    }
     try(){
         print this.greeting;
     }
 }
 var myInst = myTestClass();
+var myNewInst = myTestClass();
 myInst.greeting = "hello";
 myInst.try();
+myNewInst.try();
