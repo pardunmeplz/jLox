@@ -4,16 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5d7d88e5-0ead-43c3-b80b-232dfde2ab6a" name="Changes" comment="Adding support for use of 'this' keyword in methods to refer to instance.">
+    <list default="true" id="5d7d88e5-0ead-43c3-b80b-232dfde2ab6a" name="Changes" comment="Added Initializers and basic inheritance support to lox">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/script.lox" beforeDir="false" afterPath="$PROJECT_DIR$/script.lox" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Expr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Expr.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Interpreter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Interpreter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/LoxClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/LoxClass.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/LoxFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/LoxFunction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/LoxInstance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/LoxInstance.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Parser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Resolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Resolver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Stmt.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/lox/Stmt.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/tool/GenerateAst.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/craftingInterpreters/tool/GenerateAst.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -79,7 +77,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;
   }
 }</component>
-  <component name="RunManager" selected="Application.GenerateAst">
+  <component name="RunManager" selected="Application.Lox">
     <configuration name="GenerateAst" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.craftingInterpreters.tool.GenerateAst" />
       <module name="jLox.main" />
@@ -292,7 +290,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729624590525</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Added Initializers and basic inheritance support to lox">
+      <option name="closed" value="true" />
+      <created>1729792071179</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1729792071179</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -340,6 +346,7 @@
     <MESSAGE value="Adding support for class declaration and initialization of an instance along with getting/setting of fields in an instance." />
     <MESSAGE value="Adding support for calling methods defined in the class." />
     <MESSAGE value="Adding support for use of 'this' keyword in methods to refer to instance." />
-    <option name="LAST_COMMIT_MESSAGE" value="Adding support for use of 'this' keyword in methods to refer to instance." />
+    <MESSAGE value="Added Initializers and basic inheritance support to lox" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Initializers and basic inheritance support to lox" />
   </component>
 </project>
