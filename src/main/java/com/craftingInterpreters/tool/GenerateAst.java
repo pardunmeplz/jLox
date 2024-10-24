@@ -37,7 +37,7 @@ public class GenerateAst {
                 "While      : Expr condition, Stmt loop",
                 "Function   : Token name, List<Token> params, List<Stmt> body",
                 "ReturnStmt : Token keyword, Expr expr",
-                "ClassStmt  : Token name, List<Stmt.Function> methods"
+                "ClassStmt  : Token name, Expr.Var superclass, List<Stmt.Function> methods"
         ));
     }
 
