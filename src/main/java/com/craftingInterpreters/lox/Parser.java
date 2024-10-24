@@ -41,7 +41,7 @@ import java.util.List;
     call           → primary ( "(" arguments? ")" )* | getExpression;
     getExpression  → primary ( "." IDENTIFIER )*;
     arguments      → expression ( "," expression )*;
-    primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" ;
+    primary        → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" | "super" "." IDENTIFIER ;
 */
 
 public class Parser {
@@ -117,7 +117,6 @@ public class Parser {
        List<Stmt> body = block();
        return new Stmt.Function(name,params,body);
     }
-
 
     private Stmt varDeclaration(){
        if(match(TokenType.IDENTIFIER)){
@@ -369,6 +368,8 @@ public class Parser {
        return new Expr.Call(callee, previous(),arguments);
     }
 
+
+
     private Expr primary(){
         Token token = advance();
         switch (token.type()){
@@ -383,6 +384,10 @@ public class Parser {
                 return new Expr.Literal(null);
             case TokenType.THIS:
                 return new Expr.This(token);
+            case TokenType.SUPER:
+                if(!match(TokenType.DOT)) throw error(peek(),"Expected '.' after super");
+                if(!match(TokenType.IDENTIFIER)) throw error(peek(),"Expected method name for superClass");
+                return new Expr.Super(token, previous());
             case TokenType.IDENTIFIER:
                 return new Expr.Var(token);
             case TokenType.LEFT_PAR:

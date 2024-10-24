@@ -1,13 +1,26 @@
 class myTestClass{
     init(){
-        this.greeting = "greetings peasant >:)";
+        this.greeting = "greetings";
     }
     try(){
         print this.greeting;
     }
+    test(name){
+        print this.greeting + " " + name;
+    }
+}
+
+class mySubClass < myTestClass{
+    init(){
+        this.name = "testName";
+        super.init();
+    }
+    try(){
+        super.test(this.name);
+    }
 }
 var myInst = myTestClass();
-var myNewInst = myTestClass();
-myInst.greeting = "hello";
-myInst.try();
+var myNewInst = mySubClass();
+
 myNewInst.try();
+myInst.try();

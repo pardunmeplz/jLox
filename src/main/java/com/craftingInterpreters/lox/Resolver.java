@@ -10,11 +10,17 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
     final Interpreter interpreter;
     private final Stack<Map<String, Boolean>> scopes = new Stack<>();
     private FunctionType currentFunction = FunctionType.NONE;
+    private ClassType currentClass = ClassType.NONE;
     private enum FunctionType{
         NONE,
         METHOD,
         INITIALIZER,
         FUNCTION
+    }
+    private enum ClassType{
+        CLASS,
+        SUBCLASS,
+        NONE
     }
     Resolver(Interpreter interpreter){
        this.interpreter = interpreter;
@@ -155,8 +161,15 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
     }
 
     @Override
+    public Void visitSuperExpr(Expr.Super expr) {
+        if(currentClass != ClassType.SUBCLASS) Lox.error(expr.Keyword, "'super' can only be used in a subclass");
+        resolveLocal(expr, expr.Keyword);
+        return null;
+    }
+
+    @Override
     public Void visitThisExpr(Expr.This expr) {
-        if(currentFunction != FunctionType.METHOD) Lox.error(expr.keyword, "'this' keyword can only be used in a class method");
+        if(currentClass == ClassType.NONE) Lox.error(expr.keyword, "'this' keyword can only be used in a class method");
         resolveLocal(expr, expr.keyword);
         return null;
     }
@@ -224,11 +237,17 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
 
     @Override
     public Void visitClassStmtStmt(Stmt.ClassStmt stmt) {
+
         declare(stmt.name);
         define(stmt.name);
+        ClassType surroundingClass = currentClass;
+        currentClass = ClassType.CLASS;
         if(stmt.superclass != null){
             if(stmt.name.lexeme().equals(stmt.superclass.name.lexeme())) Lox.error(stmt.superclass.name, "A class can not inherit from itself");
-           resolve(stmt.superclass);
+            currentClass =  ClassType.SUBCLASS;
+            resolve(stmt.superclass);
+            beginScope();
+            scopes.peek().put("super", true);
         }
         beginScope();
         scopes.peek().put("this", true);
@@ -237,6 +256,8 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
             resolveFunction(method,declaration);
         }
         endScope();
+        if(stmt.superclass !=null)endScope();
+        currentClass = surroundingClass;
         return null;
     }
 }
