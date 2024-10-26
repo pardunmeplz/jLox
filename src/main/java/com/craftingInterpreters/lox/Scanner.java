@@ -29,7 +29,7 @@ public class Scanner {
         keywordMap.put("this", TokenType.THIS);
     }
     // location info
-    private int start = 0, current=0, line=0;
+    private int start = 0, current=0, line=1;
     Scanner(String source){
         this.source = source;
     }

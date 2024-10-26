@@ -126,7 +126,7 @@ public class Parser {
               initial = expression();
            }
            if(match(TokenType.SEMICOLON))return new Stmt.Var(name, initial);
-           throw error(peek(), "Missing semicolon ';' at end of statement");
+           throw error(previous(), "Missing semicolon ';' at end of statement");
        }
         throw error(peek(),"Expected name for variable declaration");
     }
@@ -228,7 +228,7 @@ public class Parser {
         if(match((TokenType.SEMICOLON))){
             return new Stmt.Expression(expression);
         }
-        throw error(peek(), "Missing semicolon ';' at end of statement");
+        throw error(previous(), "Missing semicolon ';' at end of statement");
     }
 
     private Stmt printStmt(){
@@ -236,7 +236,7 @@ public class Parser {
         if(match(TokenType.SEMICOLON)){
             return new Stmt.Print(expression);
         }
-        throw error(peek(), "Missing semicolon ';' at end of statement");
+        throw error(previous(), "Missing semicolon ';' at end of statement");
     }
 
     private List<Stmt> block(){
@@ -457,6 +457,7 @@ public class Parser {
                 case TokenType.RETURN:
                 case TokenType.PRINT:
                     return;
+                default:advance();
             }
         }
     }

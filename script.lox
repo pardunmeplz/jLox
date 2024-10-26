@@ -1,4 +1,4 @@
-class myTestClass{
+class newName{
     init(){
         this.greeting = "greetings";
     }
@@ -10,7 +10,7 @@ class myTestClass{
     }
 }
 
-class mySubClass < myTestClass{
+class mySubClass < newName{
     init(){
         this.name = "testName";
         super.init();
@@ -19,7 +19,8 @@ class mySubClass < myTestClass{
         super.test(this.name);
     }
 }
-var myInst = myTestClass();
+
+var myInst = newName();
 var myNewInst = mySubClass();
 
 myNewInst.try();
