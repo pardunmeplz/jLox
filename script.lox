@@ -1,27 +1,8 @@
-class newName{
-    init(){
-        this.greeting = "greetings";
-    }
-    try(){
-        print this.greeting;
-    }
-    test(name){
-        print this.greeting + " " + name;
-    }
+fun fib(n) {
+  if (n < 2) return n;
+  return fib(n - 2) + fib(n - 1);
 }
 
-class mySubClass < newName{
-    init(){
-        this.name = "testName";
-        super.init();
-    }
-    try(){
-        super.test(this.name);
-    }
-}
-
-var myInst = newName();
-var myNewInst = mySubClass();
-
-myNewInst.try();
-myInst.try();
+var start = clock();
+print fib(35);
+print clock() - start;
